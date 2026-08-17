@@ -1,0 +1,130 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+
+class Mercadoria
+{
+    public decimal Preco { get; }
+    public char Codigo { get; }
+
+    public Mercadoria(decimal preco, char codigo)
+    {
+        Preco = preco;
+        Codigo = codigo;
+    }
+}
+
+class Program
+{
+    private const int NUMERO_MERCADORIAS = 20;
+
+    private static readonly CultureInfo CulturaBrasileira =
+        new CultureInfo("pt-BR");
+
+    static void Main()
+    {
+        List<Mercadoria> mercadorias = new List<Mercadoria>();
+
+        Console.WriteLine("=== SUPERMERCADO DA MÃE ===");
+        Console.WriteLine(
+            "Códigos: L - Limpeza | A - Alimentação | H - Higiene\n"
+        );
+
+        for (int i = 1; i <= NUMERO_MERCADORIAS; i++)
+        {
+            Console.WriteLine($"Mercadoria {i}:");
+
+            decimal preco = LerPreco();
+            char codigo = LerCodigo();
+
+            mercadorias.Add(new Mercadoria(preco, codigo));
+
+            Console.WriteLine();
+        }
+
+        decimal totalCesta = 0;
+        decimal totalLimpeza = 0;
+        decimal totalAlimentacao = 0;
+        decimal totalHigiene = 0;
+
+        foreach (Mercadoria mercadoria in mercadorias)
+        {
+            totalCesta += mercadoria.Preco;
+
+            switch (mercadoria.Codigo)
+            {
+                case 'L':
+                    totalLimpeza += mercadoria.Preco;
+                    break;
+
+                case 'A':
+                    totalAlimentacao += mercadoria.Preco;
+                    break;
+
+                case 'H':
+                    totalHigiene += mercadoria.Preco;
+                    break;
+            }
+        }
+
+        Console.WriteLine("\n=== RESUMO DA CESTA ===");
+        Console.WriteLine($"Total da cesta: {FormatarMoeda(totalCesta)}");
+        Console.WriteLine($"Total Limpeza: {FormatarMoeda(totalLimpeza)}");
+        Console.WriteLine(
+            $"Total Alimentação: {FormatarMoeda(totalAlimentacao)}"
+        );
+        Console.WriteLine($"Total Higiene: {FormatarMoeda(totalHigiene)}");
+    }
+
+    static decimal LerPreco()
+    {
+        while (true)
+        {
+            Console.Write("Preço: R$ ");
+
+            string entrada = Console.ReadLine() ?? string.Empty;
+
+            if (decimal.TryParse(
+                    entrada,
+                    NumberStyles.Number,
+                    CulturaBrasileira,
+                    out decimal preco) &&
+                preco > 0)
+            {
+                return preco;
+            }
+
+            Console.WriteLine(
+                "Preço inválido. Digite um valor maior que zero, " +
+                "por exemplo: 12,50."
+            );
+        }
+    }
+
+    static char LerCodigo()
+    {
+        while (true)
+        {
+            Console.Write("Código (L/A/H): ");
+
+            string entrada = (Console.ReadLine() ?? string.Empty)
+                .Trim()
+                .ToUpperInvariant();
+
+            if (entrada.Length == 1 &&
+                (entrada[0] == 'L' ||
+                 entrada[0] == 'A' ||
+                 entrada[0] == 'H'))
+            {
+                return entrada[0];
+            }
+
+            Console.WriteLine("Código inválido! Use L, A ou H.");
+        }
+    }
+
+    static string FormatarMoeda(decimal valor)
+    {
+        return valor.ToString("C2", CulturaBrasileira);
+    }
+}
