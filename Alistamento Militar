@@ -1,0 +1,103 @@
+using System;
+
+abstract class Militar
+{
+    protected string nome;
+    protected string patente;
+    
+    public Militar(string nome, string patente)
+    {
+        this.nome = nome;
+        this.patente = patente;
+    }
+    
+    public string Nome
+    {
+        get { return nome; }
+        set { nome = value; }
+    }
+    
+    public string Patente
+    {
+        get { return patente; }
+        set { patente = value; }
+    }
+    
+    public abstract void Operacao();
+    
+    public virtual void ExibirInformacoes()
+    {
+        Console.WriteLine($"Nome: {nome}");
+        Console.WriteLine($"Patente: {patente}");
+    }
+}
+
+class Marinha : Militar
+{
+    public Marinha(string nome, string patente) : base(nome, patente) { }
+    
+    public override void Operacao()
+    {
+        Console.WriteLine($"{nome} ({patente}) - Realizando operação naval: Patrulhando o mar.");
+    }
+}
+
+class Exercito : Militar
+{
+    public Exercito(string nome, string patente) : base(nome, patente) { }
+    
+    public override void Operacao()
+    {
+        Console.WriteLine($"{nome} ({patente}) - Realizando operação terrestre: Patrulhando a fronteira.");
+    }
+}
+
+class Aeronautica : Militar
+{
+    public Aeronautica(string nome, string patente) : base(nome, patente) { }
+    
+    public override void Operacao()
+    {
+        Console.WriteLine($"{nome} ({patente}) - Realizando operação aérea: Patrulhando o espaço aéreo.");
+    }
+}
+
+class Treinamento
+{
+    public void Treinar(Militar[] militares)
+    {
+        Console.WriteLine("\n=== INICIANDO TREINAMENTO MILITAR ===\n");
+        
+        foreach (Militar m in militares)
+        {
+            m.ExibirInformacoes();
+            m.Operacao();
+            Console.WriteLine();
+        }
+        
+        Console.WriteLine("=== TREINAMENTO CONCLUÍDO ===");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("=== ALISTAMENTO MILITAR ===\n");
+        
+        Marinha marinha = new Marinha("Capitão João Silva", "Capitão de Mar e Guerra");
+        Exercito exercito = new Exercito("Major Carlos Santos", "Major");
+        Aeronautica aeronautica = new Aeronautica("Tenente Ana Ferreira", "Tenente-Aviador");
+        
+        Militar[] militares = new Militar[3];
+        militares[0] = marinha;
+        militares[1] = exercito;
+        militares[2] = aeronautica;
+        
+        Treinamento treinamento = new Treinamento();
+        treinamento.Treinar(militares);
+        
+        Console.WriteLine("\nPressione qualquer tecla para sair...");
+        Console.ReadKey();
+    }
+}
