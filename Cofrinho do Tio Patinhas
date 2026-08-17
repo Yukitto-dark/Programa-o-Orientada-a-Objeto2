@@ -1,0 +1,188 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+
+class Moeda
+{
+    private readonly decimal valor;
+
+    public Moeda(decimal valor)
+    {
+        if (valor <= 0)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(valor),
+                "O valor da moeda deve ser maior que zero."
+            );
+        }
+
+        this.valor = valor;
+    }
+
+    public decimal Valor
+    {
+        get { return valor; }
+    }
+}
+
+class Cofrinho
+{
+    private static readonly CultureInfo CulturaBrasileira =
+        new CultureInfo("pt-BR");
+
+    private readonly List<Moeda> moedas;
+
+    public Cofrinho()
+    {
+        moedas = new List<Moeda>();
+    }
+
+    public void AdicionarMoeda(Moeda moeda)
+    {
+        if (moeda == null)
+        {
+            throw new ArgumentNullException(nameof(moeda));
+        }
+
+        moedas.Add(moeda);
+
+        Console.WriteLine(
+            $"Moeda de {FormatarMoeda(moeda.Valor)} adicionada."
+        );
+    }
+
+    public decimal CalcularTotal()
+    {
+        decimal total = 0;
+
+        foreach (Moeda moeda in moedas)
+        {
+            total += moeda.Valor;
+        }
+
+        return total;
+    }
+
+    public int ContarMoedas()
+    {
+        return moedas.Count;
+    }
+
+    public int ContarMoedasPorValor(decimal valor)
+    {
+        if (valor <= 0)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(valor),
+                "O valor deve ser maior que zero."
+            );
+        }
+
+        int quantidade = 0;
+
+        foreach (Moeda moeda in moedas)
+        {
+            if (moeda.Valor == valor)
+            {
+                quantidade++;
+            }
+        }
+
+        return quantidade;
+    }
+
+    public Moeda? EncontrarMoedaMaiorValor()
+    {
+        if (moedas.Count == 0)
+        {
+            return null;
+        }
+
+        Moeda maior = moedas[0];
+
+        foreach (Moeda moeda in moedas)
+        {
+            if (moeda.Valor > maior.Valor)
+            {
+                maior = moeda;
+            }
+        }
+
+        return maior;
+    }
+
+    public void ExibirInformacoes()
+    {
+        if (moedas.Count == 0)
+        {
+            Console.WriteLine("\nO cofrinho está vazio!");
+            return;
+        }
+
+        Console.WriteLine("\n=== INFORMAÇÕES DO COFRINHO ===");
+        Console.WriteLine($"Total de moedas: {ContarMoedas()}");
+        Console.WriteLine($"Valor total: {FormatarMoeda(CalcularTotal())}");
+
+        Moeda? maior = EncontrarMoedaMaiorValor();
+
+        if (maior != null)
+        {
+            Console.WriteLine(
+                $"Moeda de maior valor: {FormatarMoeda(maior.Valor)}"
+            );
+        }
+
+        SortedDictionary<decimal, int> contagemPorValor =
+            new SortedDictionary<decimal, int>();
+
+        foreach (Moeda moeda in moedas)
+        {
+            if (contagemPorValor.ContainsKey(moeda.Valor))
+            {
+                contagemPorValor[moeda.Valor]++;
+            }
+            else
+            {
+                contagemPorValor[moeda.Valor] = 1;
+            }
+        }
+
+        Console.WriteLine("\nQuantidade por valor:");
+
+        foreach (KeyValuePair<decimal, int> item in contagemPorValor)
+        {
+            Console.WriteLine(
+                $"{FormatarMoeda(item.Key)}: {item.Value} moeda(s)"
+            );
+        }
+    }
+
+    private static string FormatarMoeda(decimal valor)
+    {
+        return valor.ToString("C2", CulturaBrasileira);
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("=== COFRINHO DO TIO PATINHAS ===\n");
+
+        Cofrinho cofrinho = new Cofrinho();
+
+        cofrinho.AdicionarMoeda(new Moeda(1.00m));
+        cofrinho.AdicionarMoeda(new Moeda(0.50m));
+        cofrinho.AdicionarMoeda(new Moeda(0.25m));
+        cofrinho.AdicionarMoeda(new Moeda(1.00m));
+        cofrinho.AdicionarMoeda(new Moeda(0.10m));
+        cofrinho.AdicionarMoeda(new Moeda(0.50m));
+
+        cofrinho.ExibirInformacoes();
+
+        Console.WriteLine(
+            "\nTeste - Moedas de R$ 1,00: " +
+            $"{cofrinho.ContarMoedasPorValor(1.00m)}"
+        );
+    }
+}
