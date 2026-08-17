@@ -1,0 +1,78 @@
+using System;
+using System.Collections.Generic;
+
+class Produto
+{
+    private string nome;
+    private string codigo;
+    private double preco;
+    private List<Ingrediente> ingredientes;
+    
+    public Produto(string nome, string codigo, double preco)
+    {
+        this.nome = nome;
+        this.codigo = codigo;
+        this.preco = preco;
+        ingredientes = new List<Ingrediente>();
+    }
+    
+    public void AdicionarIngrediente(Ingrediente ingrediente)
+    {
+        ingredientes.Add(ingrediente);
+    }
+    
+    public void ExibirInformacoes()
+    {
+        Console.WriteLine($"\nProduto: {nome}");
+        Console.WriteLine($"Código: {codigo}");
+        Console.WriteLine($"Preço: R$ {preco:F2}");
+        Console.WriteLine("Ingredientes:");
+        foreach (Ingrediente ing in ingredientes)
+        {
+            Console.WriteLine($"  - {ing.Nome}");
+        }
+    }
+}
+
+class Ingrediente
+{
+    private string nome;
+    
+    public Ingrediente(string nome)
+    {
+        this.nome = nome;
+    }
+    
+    public string Nome
+    {
+        get { return nome; }
+        set { nome = value; }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("=== UVV MEDS ===\n");
+        
+        Ingrediente ing1 = new Ingrediente("Paracetamol");
+        Ingrediente ing2 = new Ingrediente("Cafeína");
+        Ingrediente ing3 = new Ingrediente("Ácido Ascórbico");
+        
+        Produto produto1 = new Produto("Dipirona", "MED-001", 15.90);
+        Produto produto2 = new Produto("Vitamina C", "MED-002", 25.50);
+        
+        produto1.AdicionarIngrediente(ing1);
+        produto1.AdicionarIngrediente(ing2);
+        
+        produto2.AdicionarIngrediente(ing3);
+        produto2.AdicionarIngrediente(ing2);
+        
+        produto1.ExibirInformacoes();
+        produto2.ExibirInformacoes();
+        
+        Console.WriteLine("\nPressione qualquer tecla para sair...");
+        Console.ReadKey();
+    }
+}
