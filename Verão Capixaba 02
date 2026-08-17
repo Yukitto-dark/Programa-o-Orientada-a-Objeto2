@@ -1,0 +1,72 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+
+class Program
+{
+    static void Main()
+    {
+        const int DIAS = 15;
+        const double TEMPERATURA_MINIMA = 28;
+
+        List<double> temperaturas = new List<double>();
+
+        Console.WriteLine("=== TEMPERATURA MÉDIA DO VERÃO CAPIXABA ===");
+        Console.WriteLine(
+            $"Digite as temperaturas dos {DIAS} dias " +
+            $"(acima de {TEMPERATURA_MINIMA}°C):\n"
+        );
+
+        for (int i = 1; i <= DIAS; i++)
+        {
+            bool temperaturaValida = false;
+
+            do
+            {
+                Console.Write($"Dia {i}: ");
+
+                if (!double.TryParse(
+                        Console.ReadLine(),
+                        NumberStyles.Float,
+                        CultureInfo.CurrentCulture,
+                        out double temperatura))
+                {
+                    Console.WriteLine("Digite uma temperatura válida.");
+                    continue;
+                }
+
+                if (double.IsNaN(temperatura) ||
+                    double.IsInfinity(temperatura))
+                {
+                    Console.WriteLine("Digite uma temperatura válida.");
+                    continue;
+                }
+
+                if (temperatura > TEMPERATURA_MINIMA)
+                {
+                    temperaturas.Add(temperatura);
+                    temperaturaValida = true;
+                }
+                else
+                {
+                    Console.WriteLine(
+                        $"Temperatura inválida! " +
+                        $"Deve ser acima de {TEMPERATURA_MINIMA}°C."
+                    );
+                }
+
+            } while (!temperaturaValida);
+        }
+
+        double soma = 0;
+
+        foreach (double temperatura in temperaturas)
+        {
+            soma += temperatura;
+        }
+
+        double media = soma / temperaturas.Count;
+
+        Console.WriteLine($"\nTemperatura média do verão: {media:F2}°C");
+    }
+}
