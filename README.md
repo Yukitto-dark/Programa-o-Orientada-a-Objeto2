@@ -1,1 +1,50 @@
 # Programa-o-Orientada-a-Objeto2
+
+    Console.WriteLine("=== GESTÃO DE PESSOAS IBGE ===");
+    Console.WriteLine("Digite as idades (digite <= 0 para encerrar):\n");
+    
+    while (true)
+    {
+        Console.Write("Digite a idade: ");
+        
+        if (!int.TryParse(Console.ReadLine(), out int idade))
+{
+    Console.WriteLine("Digite apenas um número válido.");
+    continue;
+}
+        if (idade <= 0)
+            break;
+        
+        idades.Add(idade);
+    }
+    
+    if (idades.Count == 0)
+    {
+        Console.WriteLine("\nNenhuma pessoa cadastrada.");
+        return;
+    }
+    
+    int faixaA = 0, faixaB = 0, faixaC = 0, faixaD = 0, faixaE = 0;
+    
+    foreach (int idade in idades)
+    {
+        if (idade >= 1 && idade <= 15)
+            faixaA++;
+        else if (idade >= 16 && idade <= 30)
+            faixaB++;
+        else if (idade >= 31 && idade <= 45)
+            faixaC++;
+        else if (idade >= 46 && idade <= 60)
+            faixaD++;
+        else if (idade >= 61)
+            faixaE++;
+    }
+    
+    Console.WriteLine("\n=== RESULTADOS ===");
+    Console.WriteLine($"Total de pessoas: {idades.Count}");
+    Console.WriteLine($"\nFaixa A (1-15 anos): {(faixaA * 100.0 / idades.Count):F2}%");
+    Console.WriteLine($"Faixa B (16-30 anos): {(faixaB * 100.0 / idades.Count):F2}%");
+    Console.WriteLine($"Faixa C (31-45 anos): {(faixaC * 100.0 / idades.Count):F2}%");
+    Console.WriteLine($"Faixa D (46-60 anos): {(faixaD * 100.0 / idades.Count):F2}%");
+    Console.WriteLine($"Faixa E (>=61 anos): {(faixaE * 100.0 / idades.Count):F2}%");
+}
