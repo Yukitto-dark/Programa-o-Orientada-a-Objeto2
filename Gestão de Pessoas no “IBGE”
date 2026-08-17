@@ -1,3 +1,4 @@
+{
     Console.WriteLine("=== GESTÃO DE PESSOAS IBGE ===");
     Console.WriteLine("Digite as idades (digite <= 0 para encerrar):\n");
     
