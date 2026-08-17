@@ -1,0 +1,201 @@
+using System;
+
+abstract class Veiculo
+{
+    protected string modelo;
+    protected int ano;
+    
+    public Veiculo(string modelo, int ano)
+    {
+        this.modelo = modelo;
+        this.ano = ano;
+    }
+    
+    public string Modelo
+    {
+        get { return modelo; }
+        set { modelo = value; }
+    }
+    
+    public int Ano
+    {
+        get { return ano; }
+        set { ano = value; }
+    }
+    
+    public abstract void ListarVerificacoes();
+    public abstract void Ajustar();
+    public abstract void Limpar();
+}
+
+class Bicicleta : Veiculo
+{
+    private int numeroMarchas;
+    
+    public Bicicleta(string modelo, int ano, int numeroMarchas) : base(modelo, ano)
+    {
+        this.numeroMarchas = numeroMarchas;
+    }
+    
+    public int NumeroMarchas
+    {
+        get { return numeroMarchas; }
+        set { numeroMarchas = value; }
+    }
+    
+    public override void ListarVerificacoes()
+    {
+        Console.WriteLine($"Verificações para Bicicleta {modelo}:");
+        Console.WriteLine("- Verificar pressão dos pneus");
+        Console.WriteLine("- Verificar freios");
+        Console.WriteLine("- Verificar corrente");
+        Console.WriteLine("- Verificar marchas");
+    }
+    
+    public override void Ajustar()
+    {
+        Console.WriteLine($"Ajustando Bicicleta {modelo}:");
+        Console.WriteLine("- Ajustando freios");
+        Console.WriteLine("- Ajustando cambio");
+        Console.WriteLine("- Ajustando selim");
+    }
+    
+    public override void Limpar()
+    {
+        Console.WriteLine($"Limpando Bicicleta {modelo}:");
+        Console.WriteLine("- Lavando com água e sabão");
+        Console.WriteLine("- Lubrificando corrente");
+    }
+}
+
+class Automovel : Veiculo
+{
+    private string combustivel;
+    
+    public Automovel(string modelo, int ano, string combustivel) : base(modelo, ano)
+    {
+        this.combustivel = combustivel;
+    }
+    
+    public string Combustivel
+    {
+        get { return combustivel; }
+        set { combustivel = value; }
+    }
+    
+    public override void ListarVerificacoes()
+    {
+        Console.WriteLine($"Verificações para Automóvel {modelo}:");
+        Console.WriteLine("- Verificar nível de óleo");
+        Console.WriteLine("- Verificar nível de água");
+        Console.WriteLine("- Verificar pressão dos pneus");
+        Console.WriteLine("- Verificar freios");
+        Console.WriteLine("- Verificar luzes");
+    }
+    
+    public override void Ajustar()
+    {
+        Console.WriteLine($"Ajustando Automóvel {modelo}:");
+        Console.WriteLine("- Ajustando freios");
+        Console.WriteLine("- Ajustando suspensão");
+        Console.WriteLine("- Ajustando alinhamento");
+    }
+    
+    public override void Limpar()
+    {
+        Console.WriteLine($"Limpando Automóvel {modelo}:");
+        Console.WriteLine("- Lavando com água e sabão");
+        Console.WriteLine("- Aspirando interior");
+        Console.WriteLine("- Polindo lataria");
+    }
+    
+    public void MudarOleo()
+    {
+        Console.WriteLine($"Trocando óleo do Automóvel {modelo}:");
+        Console.WriteLine("- Drenando óleo velho");
+        Console.WriteLine("- Trocando filtro de óleo");
+        Console.WriteLine("- Adicionando óleo novo");
+    }
+}
+
+class Oficina
+{
+    private Random random = new Random();
+    
+    public Veiculo Proximo()
+    {
+        int tipo = random.Next(2);
+        
+        if (tipo == 0)
+        {
+            string[] modelosBicicleta = { "Caloi", "Monark", "Specialized", "Trek" };
+            string modelo = modelosBicicleta[random.Next(modelosBicicleta.Length)];
+            int ano = 2020 + random.Next(5);
+            int marchas = 7 + random.Next(15);
+            return new Bicicleta(modelo, ano, marchas);
+        }
+        else
+        {
+            string[] modelosAuto = { "Gol", "Celta", "Corsa", "Uno", "Palio" };
+            string modelo = modelosAuto[random.Next(modelosAuto.Length)];
+            int ano = 2015 + random.Next(10);
+            string[] combustiveis = { "Gasolina", "Etanol", "Flex", "Diesel" };
+            string combustivel = combustiveis[random.Next(combustiveis.Length)];
+            return new Automovel(modelo, ano, combustivel);
+        }
+    }
+    
+    public void Manutencao(Veiculo v)
+    {
+        Console.WriteLine($"\n=== INICIANDO MANUTENÇÃO EM {v.GetType().Name.ToUpper()} ===");
+        Console.WriteLine($"Modelo: {v.Modelo}");
+        Console.WriteLine($"Ano: {v.Ano}");
+        
+        if (v is Bicicleta)
+        {
+            Bicicleta b = (Bicicleta)v;
+            Console.WriteLine($"Número de marchas: {b.NumeroMarchas}");
+        }
+        else if (v is Automovel)
+        {
+            Automovel a = (Automovel)v;
+            Console.WriteLine($"Combustível: {a.Combustivel}");
+        }
+        
+        Console.WriteLine("\n--- Listando Verificações ---");
+        v.ListarVerificacoes();
+        
+        Console.WriteLine("\n--- Realizando Ajustes ---");
+        v.Ajustar();
+        
+        Console.WriteLine("\n--- Realizando Limpeza ---");
+        v.Limpar();
+        
+        if (v is Automovel)
+        {
+            Console.WriteLine("\n--- Trocando Óleo ---");
+            ((Automovel)v).MudarOleo();
+        }
+        
+        Console.WriteLine($"\n=== MANUTENÇÃO CONCLUÍDA EM {v.GetType().Name.ToUpper()} ===\n");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("=== OFICINA DO ZÉ ===\n");
+        
+        Oficina oficina = new Oficina();
+        
+        for (int i = 0; i < 5; i++)
+        {
+            Veiculo veiculo = oficina.Proximo();
+            oficina.Manutencao(veiculo);
+        }
+        
+        Console.WriteLine("\nPressione qualquer tecla para sair...");
+        Console.ReadKey();
+    }
+}
