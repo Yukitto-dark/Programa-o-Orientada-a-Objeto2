@@ -1,0 +1,87 @@
+using System;
+using System.Globalization;
+
+class Program
+{
+    static void Main()
+    {
+        const double ZERO_ABSOLUTO = 273.15;
+
+        Console.WriteLine("=== CONVERSOR DE TEMPERATURA ===");
+        Console.WriteLine("1 - Celsius para Fahrenheit");
+        Console.WriteLine("2 - Fahrenheit para Celsius");
+        Console.WriteLine("3 - Celsius para Kelvin");
+        Console.WriteLine("4 - Kelvin para Celsius");
+        Console.Write("\nEscolha uma opção: ");
+
+        if (!int.TryParse(Console.ReadLine(), out int opcao) ||
+            opcao < 1 || opcao > 4)
+        {
+            Console.WriteLine("Opção inválida!");
+            return;
+        }
+
+        Console.Write("Digite a temperatura: ");
+
+        if (!double.TryParse(
+                Console.ReadLine(),
+                NumberStyles.Float,
+                CultureInfo.CurrentCulture,
+                out double temperatura) ||
+            double.IsNaN(temperatura) ||
+            double.IsInfinity(temperatura))
+        {
+            Console.WriteLine("Temperatura inválida!");
+            return;
+        }
+
+        // Validação do zero absoluto
+        if (opcao == 3 && temperatura < -ZERO_ABSOLUTO)
+        {
+            Console.WriteLine(
+                "A temperatura em Celsius não pode ser menor que -273,15 °C."
+            );
+            return;
+        }
+
+        if (opcao == 4 && temperatura < 0)
+        {
+            Console.WriteLine(
+                "A temperatura em Kelvin não pode ser negativa."
+            );
+            return;
+        }
+
+        double resultado;
+        string unidade;
+
+        switch (opcao)
+        {
+            case 1:
+                resultado = (temperatura * 9 / 5) + 32;
+                unidade = "°F";
+                break;
+
+            case 2:
+                resultado = (temperatura - 32) * 5 / 9;
+                unidade = "°C";
+                break;
+
+            case 3:
+                resultado = temperatura + ZERO_ABSOLUTO;
+                unidade = "K";
+                break;
+
+            case 4:
+                resultado = temperatura - ZERO_ABSOLUTO;
+                unidade = "°C";
+                break;
+
+            default:
+                Console.WriteLine("Opção inválida!");
+                return;
+        }
+
+        Console.WriteLine($"\nResultado: {resultado:F2} {unidade}");
+    }
+}
