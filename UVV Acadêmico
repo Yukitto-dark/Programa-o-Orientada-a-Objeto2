@@ -1,0 +1,166 @@
+using System;
+
+class Pessoa
+{
+    protected string nome;
+    protected string cpf;
+    
+    public Pessoa(string nome, string cpf)
+    {
+        this.nome = nome;
+        this.cpf = cpf;
+    }
+    
+    public string Nome
+    {
+        get { return nome; }
+        set { nome = value; }
+    }
+    
+    public string Cpf
+    {
+        get { return cpf; }
+        set { cpf = value; }
+    }
+    
+    public virtual void ExibirInformacoes()
+    {
+        Console.WriteLine($"Nome: {nome}");
+        Console.WriteLine($"CPF: {cpf}");
+    }
+}
+
+class Aluno : Pessoa
+{
+    private string matricula;
+    private string curso;
+    
+    public Aluno(string nome, string cpf, string matricula, string curso) : base(nome, cpf)
+    {
+        this.matricula = matricula;
+        this.curso = curso;
+    }
+    
+    public string Matricula
+    {
+        get { return matricula; }
+        set { matricula = value; }
+    }
+    
+    public string Curso
+    {
+        get { return curso; }
+        set { curso = value; }
+    }
+    
+    public override void ExibirInformacoes()
+    {
+        base.ExibirInformacoes();
+        Console.WriteLine($"Matrícula: {matricula}");
+        Console.WriteLine($"Curso: {curso}");
+    }
+    
+    public void Estudar()
+    {
+        Console.WriteLine($"{nome} está estudando.");
+    }
+}
+
+class Professor : Pessoa
+{
+    private string siape;
+    private string departamento;
+    
+    public Professor(string nome, string cpf, string siape, string departamento) : base(nome, cpf)
+    {
+        this.siape = siape;
+        this.departamento = departamento;
+    }
+    
+    public string Siape
+    {
+        get { return siape; }
+        set { siape = value; }
+    }
+    
+    public string Departamento
+    {
+        get { return departamento; }
+        set { departamento = value; }
+    }
+    
+    public override void ExibirInformacoes()
+    {
+        base.ExibirInformacoes();
+        Console.WriteLine($"SIAPE: {siape}");
+        Console.WriteLine($"Departamento: {departamento}");
+    }
+    
+    public void Ensinar()
+    {
+        Console.WriteLine($"{nome} está ensinando.");
+    }
+}
+
+class Funcionario : Pessoa
+{
+    private string registro;
+    private string cargo;
+    
+    public Funcionario(string nome, string cpf, string registro, string cargo) : base(nome, cpf)
+    {
+        this.registro = registro;
+        this.cargo = cargo;
+    }
+    
+    public string Registro
+    {
+        get { return registro; }
+        set { registro = value; }
+    }
+    
+    public string Cargo
+    {
+        get { return cargo; }
+        set { cargo = value; }
+    }
+    
+    public override void ExibirInformacoes()
+    {
+        base.ExibirInformacoes();
+        Console.WriteLine($"Registro: {registro}");
+        Console.WriteLine($"Cargo: {cargo}");
+    }
+    
+    public void Trabalhar()
+    {
+        Console.WriteLine($"{nome} está trabalhando como {cargo}.");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("=== UVV ACADÊMICO ===\n");
+        
+        Aluno aluno = new Aluno("João Silva", "123.456.789-00", "2023001", "Ciência da Computação");
+        Professor professor = new Professor("Maria Santos", "987.654.321-00", "1234567", "Computação");
+        Funcionario funcionario = new Funcionario("Carlos Oliveira", "456.789.123-00", "FUNC001", "Secretário");
+        
+        Console.WriteLine("--- Aluno ---");
+        aluno.ExibirInformacoes();
+        aluno.Estudar();
+        
+        Console.WriteLine("\n--- Professor ---");
+        professor.ExibirInformacoes();
+        professor.Ensinar();
+        
+        Console.WriteLine("\n--- Funcionário ---");
+        funcionario.ExibirInformacoes();
+        funcionario.Trabalhar();
+        
+        Console.WriteLine("\nPressione qualquer tecla para sair...");
+        Console.ReadKey();
+    }
+}
