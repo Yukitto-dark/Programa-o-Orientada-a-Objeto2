@@ -1,0 +1,111 @@
+using System;
+
+interface IFourLegged
+{
+    void Walk();
+    void Run();
+}
+
+abstract class Animal
+{
+    protected string nome;
+    
+    public Animal(string nome)
+    {
+        this.nome = nome;
+    }
+    
+    public string Nome
+    {
+        get { return nome; }
+        set { nome = value; }
+    }
+    
+    public abstract void EmitirSom();
+}
+
+class Cachorro : Animal, IFourLegged
+{
+    public Cachorro(string nome) : base(nome) { }
+    
+    public override void EmitirSom()
+    {
+        Console.WriteLine($"{nome} está latindo: Au Au!");
+    }
+    
+    public void Walk()
+    {
+        Console.WriteLine($"{nome} está andando em quatro patas.");
+    }
+    
+    public void Run()
+    {
+        Console.WriteLine($"{nome} está correndo em quatro patas.");
+    }
+}
+
+class RoboCat : IFourLegged
+{
+    private string modelo;
+    
+    public RoboCat(string modelo)
+    {
+        this.modelo = modelo;
+    }
+    
+    public string Modelo
+    {
+        get { return modelo; }
+        set { modelo = value; }
+    }
+    
+    public void Walk()
+    {
+        Console.WriteLine($"Robô {modelo} está andando em quatro pernas mecânicas.");
+    }
+    
+    public void Run()
+    {
+        Console.WriteLine($"Robô {modelo} está correndo em quatro pernas mecânicas.");
+    }
+    
+    public void RealizarDiagnostico()
+    {
+        Console.WriteLine($"Robô {modelo} realizando diagnóstico dos sistemas.");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("=== ROBÓTICA OO ===\n");
+        
+        Cachorro cachorro = new Cachorro("Rex");
+        RoboCat roboCat = new RoboCat("RC-3000");
+        
+        Console.WriteLine("--- Cachorro ---");
+        cachorro.EmitirSom();
+        cachorro.Walk();
+        cachorro.Run();
+        
+        Console.WriteLine("\n--- Robô Gato ---");
+        roboCat.Walk();
+        roboCat.Run();
+        roboCat.RealizarDiagnostico();
+        
+        Console.WriteLine("\n--- Demonstração de Polimorfismo com Interface ---");
+        IFourLegged[] quatroPernas = new IFourLegged[2];
+        quatroPernas[0] = cachorro;
+        quatroPernas[1] = roboCat;
+        
+        foreach (IFourLegged ser in quatroPernas)
+        {
+            ser.Walk();
+            ser.Run();
+        }
+        
+        Console.WriteLine("\nPressione qualquer tecla para sair...");
+        Console.ReadKey();
+    }
+}
