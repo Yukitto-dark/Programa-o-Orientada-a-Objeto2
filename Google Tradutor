@@ -1,0 +1,244 @@
+using System;
+using System.Collections.Generic;
+
+class Significado
+{
+    private readonly string definicao;
+
+    public Significado(string definicao)
+    {
+        if (string.IsNullOrWhiteSpace(definicao))
+        {
+            throw new ArgumentException(
+                "A definição não pode ficar vazia.",
+                nameof(definicao)
+            );
+        }
+
+        this.definicao = definicao.Trim();
+    }
+
+    public string Definicao
+    {
+        get { return definicao; }
+    }
+}
+
+class Palavra
+{
+    private readonly string texto;
+    private readonly List<Significado> significados;
+
+    public Palavra(string texto)
+    {
+        if (string.IsNullOrWhiteSpace(texto))
+        {
+            throw new ArgumentException(
+                "A palavra não pode ficar vazia.",
+                nameof(texto)
+            );
+        }
+
+        this.texto = texto.Trim();
+        significados = new List<Significado>();
+    }
+
+    public string Texto
+    {
+        get { return texto; }
+    }
+
+    public void AdicionarSignificado(string definicao)
+    {
+        Significado significado = new Significado(definicao);
+        significados.Add(significado);
+
+        Console.WriteLine(
+            $"Significado adicionado à palavra '{Texto}'."
+        );
+    }
+
+    // O número do significado começa em 1, como exibido na tela.
+    public void RemoverSignificado(int numero)
+    {
+        if (numero < 1 || numero > significados.Count)
+        {
+            Console.WriteLine("Número de significado inválido!");
+            return;
+        }
+
+        int indice = numero - 1;
+
+        Console.WriteLine(
+            $"Significado removido: {significados[indice].Definicao}"
+        );
+
+        significados.RemoveAt(indice);
+    }
+
+    public IReadOnlyList<Significado> GetSignificados()
+    {
+        return significados.AsReadOnly();
+    }
+
+    public bool ContemSignificado(string definicao)
+    {
+        if (string.IsNullOrWhiteSpace(definicao))
+        {
+            return false;
+        }
+
+        foreach (Significado significado in significados)
+        {
+            if (significado.Definicao.IndexOf(
+                    definicao,
+                    StringComparison.OrdinalIgnoreCase
+                ) >= 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void ExibirSignificados()
+    {
+        if (significados.Count == 0)
+        {
+            Console.WriteLine(
+                $"Nenhum significado cadastrado para '{Texto}'."
+            );
+            return;
+        }
+
+        Console.WriteLine($"\nSignificados de '{Texto}':");
+
+        for (int i = 0; i < significados.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}. {significados[i].Definicao}");
+        }
+    }
+}
+
+class Dicionario
+{
+    private readonly List<Palavra> palavras;
+
+    public Dicionario()
+    {
+        palavras = new List<Palavra>();
+    }
+
+    public void AdicionarPalavra(Palavra palavra)
+    {
+        if (palavra == null)
+        {
+            throw new ArgumentNullException(nameof(palavra));
+        }
+
+        if (BuscarPalavra(palavra.Texto) != null)
+        {
+            Console.WriteLine(
+                $"A palavra '{palavra.Texto}' já existe no dicionário."
+            );
+            return;
+        }
+
+        palavras.Add(palavra);
+
+        Console.WriteLine(
+            $"Palavra '{palavra.Texto}' adicionada ao dicionário."
+        );
+    }
+
+    public Palavra? BuscarPalavra(string texto)
+    {
+        if (string.IsNullOrWhiteSpace(texto))
+        {
+            return null;
+        }
+
+        foreach (Palavra palavra in palavras)
+        {
+            if (string.Equals(
+                    palavra.Texto,
+                    texto.Trim(),
+                    StringComparison.OrdinalIgnoreCase
+                ))
+            {
+                return palavra;
+            }
+        }
+
+        return null;
+    }
+
+    public void ExibirDicionario()
+    {
+        if (palavras.Count == 0)
+        {
+            Console.WriteLine("Dicionário vazio.");
+            return;
+        }
+
+        Console.WriteLine("\n=== DICIONÁRIO ===");
+
+        foreach (Palavra palavra in palavras)
+        {
+            Console.WriteLine($"\nPalavra: {palavra.Texto}");
+            palavra.ExibirSignificados();
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("=== GOOGLE TRADUTOR - DICIONÁRIO ===\n");
+
+        Dicionario dicionario = new Dicionario();
+
+        Palavra palavra1 = new Palavra("Cachorro");
+
+        palavra1.AdicionarSignificado(
+            "Animal doméstico da família dos canídeos."
+        );
+
+        palavra1.AdicionarSignificado(
+            "Pessoa mal educada ou grossa."
+        );
+
+        Palavra palavra2 = new Palavra("Casa");
+
+        palavra2.AdicionarSignificado(
+            "Edificação para moradia."
+        );
+
+        palavra2.AdicionarSignificado(
+            "Família ou lar."
+        );
+
+        dicionario.AdicionarPalavra(palavra1);
+        dicionario.AdicionarPalavra(palavra2);
+
+        dicionario.ExibirDicionario();
+
+        Console.WriteLine("\n--- Teste de Busca ---");
+
+        Palavra? palavraBuscada = dicionario.BuscarPalavra("cachorro");
+
+        if (palavraBuscada != null)
+        {
+            palavraBuscada.ExibirSignificados();
+        }
+
+        Console.WriteLine("\n--- Pesquisa de Significado ---");
+
+        Console.WriteLine(
+            "Contém 'moradia' em 'casa': " +
+            $"{palavra2.ContemSignificado("moradia")}"
+        );
+    }
+}
