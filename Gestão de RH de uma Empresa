@@ -1,0 +1,139 @@
+using System;
+using System.Globalization;
+
+class Funcionario
+{
+    private static readonly CultureInfo CulturaBrasileira =
+        new CultureInfo("pt-BR");
+
+    private string nome = string.Empty;
+    private string cargo = string.Empty;
+    private decimal salario;
+
+    public Funcionario()
+    {
+    }
+
+    public Funcionario(string nome, string cargo, decimal salario)
+    {
+        Nome = nome;
+        Cargo = cargo;
+        Salario = salario;
+    }
+
+    public string Nome
+    {
+        get { return nome; }
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new ArgumentException(
+                    "O nome não pode ficar vazio.",
+                    nameof(value)
+                );
+            }
+
+            nome = value.Trim();
+        }
+    }
+
+    public string Cargo
+    {
+        get { return cargo; }
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new ArgumentException(
+                    "O cargo não pode ficar vazio.",
+                    nameof(value)
+                );
+            }
+
+            cargo = value.Trim();
+        }
+    }
+
+    public decimal Salario
+    {
+        get { return salario; }
+        set
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(value),
+                    "O salário não pode ser negativo."
+                );
+            }
+
+            salario = value;
+        }
+    }
+
+    public void Trabalhar()
+    {
+        Console.WriteLine($"{Nome} está trabalhando como {Cargo}.");
+    }
+
+    public void ReceberSalario()
+    {
+        string salarioFormatado = Salario.ToString(
+            "C2",
+            CulturaBrasileira
+        );
+
+        Console.WriteLine($"{Nome} recebeu {salarioFormatado} de salário.");
+    }
+
+    public void TirarFerias()
+    {
+        Console.WriteLine($"{Nome} está tirando férias.");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("=== GESTÃO DE RH ===");
+
+        Funcionario func1 = new Funcionario(
+            "João Silva",
+            "Desenvolvedor",
+            5000.00m
+        );
+
+        Funcionario func2 = new Funcionario(
+            "Maria Santos",
+            "Analista",
+            4500.00m
+        );
+
+        Funcionario func3 = new Funcionario();
+
+        func3.Nome = "Carlos Oliveira";
+        func3.Cargo = "Gerente";
+        func3.Salario = 8000.00m;
+
+        Console.WriteLine("\n--- Funcionário 1 ---");
+        func1.Trabalhar();
+        func1.ReceberSalario();
+        func1.TirarFerias();
+
+        Console.WriteLine("\n--- Funcionário 2 ---");
+        func2.Trabalhar();
+        func2.ReceberSalario();
+
+        Console.WriteLine("\n--- Funcionário 3 ---");
+        Console.WriteLine($"Nome: {func3.Nome}");
+        Console.WriteLine($"Cargo: {func3.Cargo}");
+        Console.WriteLine(
+            $"Salário: {func3.Salario.ToString("C2", new CultureInfo("pt-BR"))}"
+        );
+
+        func3.Trabalhar();
+        func3.ReceberSalario();
+    }
+}
