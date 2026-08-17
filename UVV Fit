@@ -1,0 +1,59 @@
+using System;
+
+abstract class PesoIdealPessoa
+{
+    public abstract double GetPesoIdeal(double altura);
+}
+
+class PesoIdealHomem : PesoIdealPessoa
+{
+    public override double GetPesoIdeal(double altura)
+    {
+        return (72.7 * altura) - 58;
+    }
+}
+
+class PesoIdealMulher : PesoIdealPessoa
+{
+    public override double GetPesoIdeal(double altura)
+    {
+        return (62.1 * altura) - 44.7;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("=== UVV FIT - PESO IDEAL ===\n");
+        
+        Console.Write("Digite o sexo (M/F): ");
+        string sexoInput = Console.ReadLine();
+        char sexo = char.ToUpper(sexoInput[0]);
+        
+        Console.Write("Digite a altura (ex: 1.75): ");
+        double altura = double.Parse(Console.ReadLine());
+        
+        PesoIdealPessoa calculadora = null;
+        
+        if (sexo == 'M')
+        {
+            calculadora = new PesoIdealHomem();
+        }
+        else if (sexo == 'F')
+        {
+            calculadora = new PesoIdealMulher();
+        }
+        else
+        {
+            Console.WriteLine("Sexo inválido! Use M ou F.");
+            return;
+        }
+        
+        double pesoIdeal = calculadora.GetPesoIdeal(altura);
+        Console.WriteLine($"\nPeso ideal: {pesoIdeal:F2} kg");
+        
+        Console.WriteLine("\nPressione qualquer tecla para sair...");
+        Console.ReadKey();
+    }
+}
