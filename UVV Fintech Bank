@@ -1,0 +1,164 @@
+using System;
+
+class ContaBancaria
+{
+    protected string numeroConta;
+    protected string titular;
+    protected double saldo;
+    
+    public ContaBancaria(string numeroConta, string titular, double saldoInicial)
+    {
+        this.numeroConta = numeroConta;
+        this.titular = titular;
+        saldo = saldoInicial;
+    }
+    
+    public string NumeroConta
+    {
+        get { return numeroConta; }
+        set { numeroConta = value; }
+    }
+    
+    public string Titular
+    {
+        get { return titular; }
+        set { titular = value; }
+    }
+    
+    public double Saldo
+    {
+        get { return saldo; }
+        protected set { saldo = value; }
+    }
+    
+    public virtual void Depositar(double valor)
+    {
+        if (valor > 0)
+        {
+            saldo += valor;
+            Console.WriteLine($"Depósito de R$ {valor:F2} realizado. Saldo: R$ {saldo:F2}");
+        }
+        else
+        {
+            Console.WriteLine("Valor de depósito inválido!");
+        }
+    }
+    
+    public virtual void Sacar(double valor)
+    {
+        if (valor > 0 && valor <= saldo)
+        {
+            saldo -= valor;
+            Console.WriteLine($"Saque de R$ {valor:F2} realizado. Saldo: R$ {saldo:F2}");
+        }
+        else
+        {
+            Console.WriteLine("Saldo insuficiente ou valor inválido!");
+        }
+    }
+    
+    public virtual void ExibirInformacoes()
+    {
+        Console.WriteLine($"Conta: {numeroConta}");
+        Console.WriteLine($"Titular: {titular}");
+        Console.WriteLine($"Saldo: R$ {saldo:F2}");
+    }
+}
+
+class ContaCorrente : ContaBancaria
+{
+    private double limiteChequeEspecial;
+    
+    public ContaCorrente(string numeroConta, string titular, double saldoInicial, double limiteChequeEspecial) 
+        : base(numeroConta, titular, saldoInicial)
+    {
+        this.limiteChequeEspecial = limiteChequeEspecial;
+    }
+    
+    public double LimiteChequeEspecial
+    {
+        get { return limiteChequeEspecial; }
+        set { limiteChequeEspecial = value; }
+    }
+    
+    public override void Sacar(double valor)
+    {
+        if (valor > 0 && valor <= saldo + limiteChequeEspecial)
+        {
+            saldo -= valor;
+            Console.WriteLine($"Saque de R$ {valor:F2} realizado. Saldo: R$ {saldo:F2}");
+            if (saldo < 0)
+            {
+                Console.WriteLine($"Usando cheque especial. Limite restante: R$ {limiteChequeEspecial + saldo:F2}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Limite insuficiente ou valor inválido!");
+        }
+    }
+    
+    public override void ExibirInformacoes()
+    {
+        base.ExibirInformacoes();
+        Console.WriteLine($"Limite Cheque Especial: R$ {limiteChequeEspecial:F2}");
+    }
+}
+
+class ContaPoupanca : ContaBancaria
+{
+    private double taxaJuros;
+    
+    public ContaPoupanca(string numeroConta, string titular, double saldoInicial, double taxaJuros) 
+        : base(numeroConta, titular, saldoInicial)
+    {
+        this.taxaJuros = taxaJuros;
+    }
+    
+    public double TaxaJuros
+    {
+        get { return taxaJuros; }
+        set { taxaJuros = value; }
+    }
+    
+    public void AplicarJuros()
+    {
+        double juros = saldo * (taxaJuros / 100);
+        saldo += juros;
+        Console.WriteLine($"Juros de R$ {juros:F2} aplicados. Saldo: R$ {saldo:F2}");
+    }
+    
+    public override void ExibirInformacoes()
+    {
+        base.ExibirInformacoes();
+        Console.WriteLine($"Taxa de Juros: {taxaJuros}%");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("=== UVV FINTECH BANK ===\n");
+        
+        ContaCorrente contaCorrente = new ContaCorrente("001-1", "João Silva", 1000.00, 500.00);
+        ContaPoupanca contaPoupanca = new ContaPoupanca("002-1", "Maria Santos", 5000.00, 0.5);
+        
+        Console.WriteLine("--- Conta Corrente ---");
+        contaCorrente.ExibirInformacoes();
+        Console.WriteLine();
+        contaCorrente.Depositar(200);
+        contaCorrente.Sacar(1200);
+        contaCorrente.Sacar(400);
+        
+        Console.WriteLine("\n--- Conta Poupança ---");
+        contaPoupanca.ExibirInformacoes();
+        Console.WriteLine();
+        contaPoupanca.Depositar(1000);
+        contaPoupanca.AplicarJuros();
+        contaPoupanca.ExibirInformacoes();
+        
+        Console.WriteLine("\nPressione qualquer tecla para sair...");
+        Console.ReadKey();
+    }
+}
