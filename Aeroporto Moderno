@@ -1,0 +1,125 @@
+using System;
+
+class Pessoa
+{
+    protected string nome;
+    protected string cpf;
+    
+    public Pessoa(string nome, string cpf)
+    {
+        this.nome = nome;
+        this.cpf = cpf;
+    }
+    
+    public string Nome
+    {
+        get { return nome; }
+        set { nome = value; }
+    }
+    
+    public string Cpf
+    {
+        get { return cpf; }
+        set { cpf = value; }
+    }
+    
+    public virtual void ExibirInformacoes()
+    {
+        Console.WriteLine($"Nome: {nome}");
+        Console.WriteLine($"CPF: {cpf}");
+    }
+}
+
+class Passageiro : Pessoa
+{
+    private string numeroPassagem;
+    private string destino;
+    
+    public Passageiro(string nome, string cpf, string numeroPassagem, string destino) : base(nome, cpf)
+    {
+        this.numeroPassagem = numeroPassagem;
+        this.destino = destino;
+    }
+    
+    public string NumeroPassagem
+    {
+        get { return numeroPassagem; }
+        set { numeroPassagem = value; }
+    }
+    
+    public string Destino
+    {
+        get { return destino; }
+        set { destino = value; }
+    }
+    
+    public override void ExibirInformacoes()
+    {
+        base.ExibirInformacoes();
+        Console.WriteLine($"Número da Passagem: {numeroPassagem}");
+        Console.WriteLine($"Destino: {destino}");
+    }
+    
+    public void Embarcar()
+    {
+        Console.WriteLine($"{nome} está embarcando para {destino}.");
+    }
+}
+
+class FuncionarioAeroporto : Pessoa
+{
+    private string matricula;
+    private string funcao;
+    
+    public FuncionarioAeroporto(string nome, string cpf, string matricula, string funcao) : base(nome, cpf)
+    {
+        this.matricula = matricula;
+        this.funcao = funcao;
+    }
+    
+    public string Matricula
+    {
+        get { return matricula; }
+        set { matricula = value; }
+    }
+    
+    public string Funcao
+    {
+        get { return funcao; }
+        set { funcao = value; }
+    }
+    
+    public override void ExibirInformacoes()
+    {
+        base.ExibirInformacoes();
+        Console.WriteLine($"Matrícula: {matricula}");
+        Console.WriteLine($"Função: {funcao}");
+    }
+    
+    public void Trabalhar()
+    {
+        Console.WriteLine($"{nome} está trabalhando como {funcao}.");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("=== AEROPORTO MODERNO ===\n");
+        
+        Passageiro passageiro = new Passageiro("Ana Ferreira", "111.222.333-44", "PASS-2024001", "São Paulo");
+        FuncionarioAeroporto funcionario = new FuncionarioAeroporto("Roberto Santos", "555.666.777-88", "FUNC-A-001", "Piloto");
+        
+        Console.WriteLine("--- Passageiro ---");
+        passageiro.ExibirInformacoes();
+        passageiro.Embarcar();
+        
+        Console.WriteLine("\n--- Funcionário ---");
+        funcionario.ExibirInformacoes();
+        funcionario.Trabalhar();
+        
+        Console.WriteLine("\nPressione qualquer tecla para sair...");
+        Console.ReadKey();
+    }
+}
